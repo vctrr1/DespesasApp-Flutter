@@ -3,6 +3,7 @@ import 'dart:math';
 import './components/transaction_form.dart';
 import './components/transactions_list.dart';
 import './models/transaction.dart';
+import './components/chart.dart';
 
 main() => runApp(const ExpensesApp());
 
@@ -18,7 +19,7 @@ class ExpensesApp extends StatelessWidget {
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.purple,
-          secondary: Colors.grey,
+          secondary: Colors.blue,
         ),
         textTheme: ThemeData.light().textTheme.copyWith(
               headline6: const TextStyle(
@@ -48,20 +49,34 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _transactions = [
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: 't0',
+      title: 'Conta Antiga',
+      value: 332.2,
+      date: DateTime.now().subtract(Duration(days: 33)),
+    ),
     Transaction(
       id: 't1',
       title: 'Tenis Novo',
       value: 213.2,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(Duration(days: 3)),
     ),
     Transaction(
       id: 't2',
       title: 'Bola de Basquete',
       value: 54.3,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(Duration(days: 4)),
     ),
   ];
+
+  List<Transaction> get _recentsTransactions {
+    return _transactions.where((tr) {
+      return tr.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+      ));
+    }).toList();
+  }
 
   _addTransaction(String title, double value) {
     final newTransaction = Transaction(
@@ -100,10 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Card(
-              elevation: 5,
-              child: Text("Testando"),
-            ),
+            Chart(_recentsTransactions),
             TransactionsList(_transactions),
           ],
         ),
