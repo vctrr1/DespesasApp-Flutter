@@ -58,7 +58,9 @@ class Chart extends StatelessWidget {
               fit: FlexFit.tight,
               child: ChartBar(
                 label: e['day'].toString(),
-                percentage: (e['value'] as double) / _weekTotalValue,
+                percentage: _weekTotalValue == 0
+                    ? 0
+                    : (e['value'] as double) / _weekTotalValue,
                 value: (e['value'] as double),
               ),
             );
